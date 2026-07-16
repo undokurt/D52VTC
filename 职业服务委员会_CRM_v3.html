@@ -1,0 +1,3250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocational Service Committee CRM v3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #333;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+        
+        .header .subtitle {
+            font-size: 1em;
+            color: #888;
+            font-style: italic;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        
+        .header .desc {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .controls {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            margin-bottom: 15px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d0d0d0;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: #333;
+        }
+        
+        .search-bar input::placeholder {
+            color: #aaa;
+        }
+        
+        .filter-section {
+            margin-bottom: 15px;
+        }
+        
+        .filter-section-label {
+            font-size: 0.75em;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            padding: 6px 14px;
+            border: 1px solid #d0d0d0;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+        
+        .filter-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .stats span {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            border-color: #999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+            position: relative;
+        }
+        
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .name-section h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .name-section .english-name {
+            font-size: 0.9em;
+            color: #999;
+            font-weight: 400;
+        }
+        
+        .header-tags {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        
+        .category-tag {
+            background: #333;
+            color: white;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .club-tag {
+            background: #f0f0f0;
+            color: #555;
+            border: 1px solid #d0d0d0;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            font-weight: 500;
+        }
+        
+        .title-company {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .title-company strong {
+            color: #333;
+        }
+        
+        .card-edit-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 1px solid #d0d0d0;
+            color: #999;
+            padding: 4px 10px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .card-edit-btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .info-section {
+            margin-bottom: 16px;
+        }
+        
+        .info-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            font-size: 0.75em;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 0.9em;
+            color: #333;
+        }
+        
+        .info-value a {
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #d0d0d0;
+            transition: border-color 0.2s;
+        }
+        
+        .info-value a:hover {
+            border-color: #333;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .card-footer {
+            padding: 16px 20px;
+            background: #fafafa;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .card-footer strong {
+            color: #333;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9em;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        .form-group label .en {
+            color: #999;
+            font-weight: 400;
+            font-size: 0.85em;
+            margin-left: 4px;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #333;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .form-group input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            color: #999;
+        }
+        
+        .readonly-hint {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        
+        .save-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        
+        .save-btn:hover {
+            background: #1a1a1a;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .legend-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+        }
+        
+        .legend-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .legend-card:hover {
+            border-color: #333;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        
+        .legend-card-code {
+            background: #333;
+            color: white;
+            padding: 3px 8px;
+            font-weight: 600;
+            font-size: 0.8em;
+            min-width: 28px;
+            text-align: center;
+        }
+        
+        .legend-card-label {
+            font-size: 0.85em;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .legend-card-label .en {
+            color: #999;
+            font-weight: 400;
+            font-size: 0.9em;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>职业服务委员会</h1>
+            <div class="subtitle">Vocational Service Committee</div>
+            <div class="desc">联系人管理系统 · Contact Management System</div>
+        </div>
+        
+        <div class="controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="搜索 Search：姓名 Name、公司 Company、职位 Title、行业 Industry...">
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-section-label">职业分类 / Vocational Category</div>
+                <div class="filter-buttons" id="categoryFilters">
+                    <button class="filter-btn active" data-type="category" data-value="all">全部 All (160)</button>
+                    <button class="filter-btn" data-type="category" data-value="01">01 IT 科技/互联网/软件/信息 (10)</button>
+                    <button class="filter-btn" data-type="category" data-value="02">02 FIN 金融/财务/银行/投资/保险/基金/证券 (15)</button>
+                    <button class="filter-btn" data-type="category" data-value="03">03 RE 房地产/物业/建筑/商管 (9)</button>
+                    <button class="filter-btn" data-type="category" data-value="04">04 MFG 生产制造/供应链/环境/能源 (32)</button>
+                    <button class="filter-btn" data-type="category" data-value="05">05 MED 医药/健康/生技 (17)</button>
+                    <button class="filter-btn" data-type="category" data-value="06">06 LEG 律师/法务/合规/政府/NGO (5)</button>
+                    <button class="filter-btn" data-type="category" data-value="07">07 TRADE 贸易/运输/报关/货代 (15)</button>
+                    <button class="filter-btn" data-type="category" data-value="08">08 EDU 教育/培训/留学/学术机构 (10)</button>
+                    <button class="filter-btn" data-type="category" data-value="09">09 LIFE 休闲/体育/户外/宠物 (8)</button>
+                    <button class="filter-btn" data-type="category" data-value="10">10 ART 设计/艺术/音乐/影视/文化/IP (17)</button>
+                    <button class="filter-btn" data-type="category" data-value="11">11 MARCOM 市场/公关/传播/媒体/广告/品牌 (4)</button>
+                    <button class="filter-btn" data-type="category" data-value="12">12 CONS 餐饮/零售/服务/电商/快消 (17)</button>
+                    <button class="filter-btn" data-type="category" data-value="13">13 AGRI 农/林/渔/牧 (1)</button>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <div class="filter-section-label">所属分社 / Club</div>
+                <div class="filter-buttons" id="clubFilters">
+                    <button class="filter-btn active" data-type="club" data-value="all">全部 All (160)</button>
+                    <button class="filter-btn" data-type="club" data-value="昆山社">昆山社 RC Kunshan (16)</button>
+                    <button class="filter-btn" data-type="club" data-value="虹桥社">虹桥社 RC Shanghai Hongqiao (38)</button>
+                    <button class="filter-btn" data-type="club" data-value="古北社">古北社 RC Shanghai Gubei (22)</button>
+                    <button class="filter-btn" data-type="club" data-value="文华社">文华社 RC Suzhou Wenhua (28)</button>
+                    <button class="filter-btn" data-type="club" data-value="扶新社">扶新社 RC Shanghai Fusin (5)</button>
+                    <button class="filter-btn" data-type="club" data-value="香江社">香江社 RC Beijing Riviera (24)</button>
+                    <button class="filter-btn" data-type="club" data-value="浦西社">浦西社 RC Shanghai Puxi (27)</button>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div>总联系人 Total：<span>160</span></div>
+                <div>职业分类 Categories：<span>13</span></div>
+                <div>分社 Clubs：<span>昆山社 RC Kunshan (16) · 虹桥社 RC Shanghai Hongqiao (38) · 古北社 RC Shanghai Gubei (22) · 文华社 RC Suzhou Wenhua (28) · 扶新社 RC Shanghai Fusin (5) · 香江社 RC Beijing Riviera (24) · 浦西社 RC Shanghai Puxi (27)</span></div>
+            </div>
+        
+        <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+    
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>编辑联系人 <span style="color:#999;font-weight:400;font-size:0.8em;">Edit Contact</span></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label>姓名 <span class="en">Name</span></label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>英文名 <span class="en">English Name</span></label>
+                    <input type="text" id="editEnglishName">
+                </div>
+                <div class="form-group">
+                    <label>公司名称 <span class="en">Company</span></label>
+                    <input type="text" id="editCompany" required>
+                </div>
+                <div class="form-group">
+                    <label>职位 <span class="en">Title</span></label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>职业分类 <span class="en">Category</span></label>
+                    <select id="editCategory" required>
+                        <option value="01">01 IT 科技/互联网/软件/信息</option>
+                        <option value="02">02 FIN 金融/财务/银行/投资/保险/基金/证券</option>
+                        <option value="03">03 RE 房地产/物业/建筑/商管</option>
+                        <option value="04">04 MFG 生产制造/供应链/环境/能源</option>
+                        <option value="05">05 MED 医药/健康/生技</option>
+                        <option value="06">06 LEG 律师/法务/合规/政府/NGO</option>
+                        <option value="07">07 TRADE 贸易/运输/报关/货代</option>
+                        <option value="08">08 EDU 教育/培训/留学/学术机构</option>
+                        <option value="09">09 LIFE 休闲/体育/户外/宠物</option>
+                        <option value="10">10 ART 设计/艺术/音乐/影视/文化/IP</option>
+                        <option value="11">11 MARCOM 市场/公关/传播/媒体/广告/品牌</option>
+                        <option value="12">12 CONS 餐饮/零售/服务/电商/快消</option>
+                        <option value="13">13 AGRI 农/林/渔/牧</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>细分行业 <span class="en">Sub-industry</span></label>
+                    <input type="text" id="editSubCategory">
+                </div>
+                <div class="form-group">
+                    <label>所属分社 <span class="en">Club</span></label>
+                    <select id="editClub">
+                        <option value="">-- 选择分社 Select Club --</option>
+                        <option value="昆山社">昆山社 RC Kunshan</option>
+                        <option value="虹桥社">虹桥社 RC Shanghai Hongqiao</option>
+                        <option value="古北社">古北社 RC Shanghai Gubei</option>
+                        <option value="文华社">文华社 RC Suzhou Wenhua</option>
+                        <option value="扶新社">扶新社 RC Shanghai Fusin</option>
+                        <option value="香江社">香江社 RC Beijing Riviera</option>
+                        <option value="浦西社">浦西社 RC Shanghai Puxi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>电话 <span class="en">Phone</span></label>
+                    <input type="text" id="editPhone">
+                    <div class="readonly-hint" id="phoneHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
+                </div>
+                <div class="form-group">
+                    <label>微信 <span class="en">WeChat</span></label>
+                    <input type="text" id="editWechat">
+                    <div class="readonly-hint" id="wechatHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
+                </div>
+                <div class="form-group">
+                    <label>邮箱 <span class="en">Email</span></label>
+                    <input type="email" id="editEmail">
+                    <div class="readonly-hint" id="emailHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
+                </div>
+                <div class="form-group">
+                    <label>社团职务 <span class="en">Committee Role</span></label>
+                    <textarea id="editRotaryRole"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>自我介绍 <span class="en">Introduction</span></label>
+                    <textarea id="editIntro"></textarea>
+                </div>
+                <button type="submit" class="save-btn">保存 / Save</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const categories = {
+            '01': { code: 'IT', name: '科技' },
+            '02': { code: 'FIN', name: '金融' },
+            '03': { code: 'RE', name: '地产' },
+            '04': { code: 'MFG', name: '制造' },
+            '05': { code: 'MED', name: '医疗' },
+            '06': { code: 'LEG', name: '政法' },
+            '07': { code: 'TRADE', name: '贸易' },
+            '08': { code: 'EDU', name: '教育' },
+            '09': { code: 'LIFE', name: '乐活' },
+            '10': { code: 'ART', name: '文创' },
+            '11': { code: 'MARCOM', name: '传媒' },
+            '12': { code: 'CONS', name: '消费' },
+            '13': { code: 'AGRI', name: '农渔' }
+        };
+        
+        const clubNames = {
+            '昆山社': { cn: '昆山社', en: 'RC Kunshan' },
+            '虹桥社': { cn: '虹桥社', en: 'RC Shanghai Hongqiao' },
+            '古北社': { cn: '古北社', en: 'RC Shanghai Gubei' },
+            '文华社': { cn: '文华社', en: 'RC Suzhou Wenhua' },
+            '扶新社': { cn: '扶新社', en: 'RC Shanghai Fusin' },
+            '香江社': { cn: '香江社', en: 'RC Beijing Riviera' },
+            '浦西社': { cn: '浦西社', en: 'RC Shanghai Puxi' }
+        };
+        
+        const contacts = [
+            {
+                id: 1,
+                name: "韩宇豪",
+                englishName: "Kurt",
+                company: "诺加鑫信息科技有限公司",
+                title: "创始人",
+                category: "02",
+                subCategory: "金融/财富管理",
+                club: "昆山社",
+                phone: "185 2171 1709",
+                wechat: "KurtHan",
+                email: "Kurt@xinfo.com",
+                rotaryRole: "昆山社2024-25社长/扶轮基金主委/财务",
+                intro: "家族办公室，专注中国市场两岸三地金融与投资策略，与国内多家PE投资机构及上市企业合作，提供财税法商专属订制方案，协助企业与家族建立财富防火墙。"
+            },
+            {
+                id: 2,
+                name: "王冠得",
+                englishName: "James",
+                company: "昆山威钢金属工业有限公司",
+                title: "总经理",
+                category: "04",
+                subCategory: "金属加工/钢材贸易",
+                club: "昆山社",
+                phone: "189 1266 2088",
+                wechat: "James-PS",
+                email: "james@kspowersteel.com",
+                rotaryRole: "昆山社社长当选人/秘书长",
+                intro: "不锈钢、铬和中高碳钢材料贸易和加工，总公司创立于台北，30年经验，中国及马来西亚设有分公司。"
+            },
+            {
+                id: 3,
+                name: "翁茂峯",
+                englishName: "Belt",
+                company: "上海欧舟工业皮带有限公司",
+                title: "董事长",
+                category: "04",
+                subCategory: "工业皮带/传动设备",
+                club: "昆山社",
+                phone: "189 1322 8313",
+                wechat: "wxid_hu2o9mm9jn8o22",
+                email: "gary-w@ouzhou-eib.com",
+                rotaryRole: "昆山社创社社长/PAG/服务计划主委",
+                intro: "外商独资企业，1995年成立，工业皮带生产研发，昆山有生产工厂及研发室，满足客户多样化订制需求。"
+            },
+            {
+                id: 4,
+                name: "谢武杰",
+                englishName: "Plasma",
+                company: "台倍斯焊割自动化设备有限公司",
+                title: "总经理",
+                category: "04",
+                subCategory: "焊接设备/自动化",
+                club: "昆山社",
+                phone: "138 6260 0699",
+                wechat: "xiejie58999",
+                email: "xiewujie@139.com",
+                rotaryRole: "昆山社2017-18社长/PAG/行政管理主委",
+                intro: "1983年创立于台湾，专注焊割行业40余年，2001年进驻昆山。德国EWM焊机、日本SanRex焊机、台湾Plasma高精密焊切设备。"
+            },
+            {
+                id: 5,
+                name: "陈映余",
+                englishName: "Zac",
+                company: "凯斯开普商贸（凯撒卫浴）",
+                title: "总经理",
+                category: "07",
+                subCategory: "卫浴设备/贸易",
+                club: "昆山社",
+                phone: "159 9562 8925",
+                wechat: "yingyu1126",
+                email: "yingyu@kskp-caesar.com",
+                rotaryRole: "昆山社2021-22社长/膳食主委",
+                intro: "台湾上市品牌凯撒卫浴CAESAR中国区授权代理商，专营全系列高质量卫浴设备。感官驾驭(搭搭房)创始总经理。"
+            },
+            {
+                id: 6,
+                name: "陈志成",
+                englishName: "Jameson",
+                company: "昆山华山劲威茶业有限公司",
+                title: "销售",
+                category: "12",
+                subCategory: "茶叶/饮品供应",
+                club: "昆山社",
+                phone: "1896269 2094",
+                wechat: "jameson1974",
+                email: "2658063578@qq.com",
+                rotaryRole: "昆山社公共形象主委/纠察",
+                intro: "商业用饮料茶叶供应，古茗、百分茶、茶颜悦色、蜜雪冰城等品牌供应商，50年老茶厂。"
+            },
+            {
+                id: 7,
+                name: "李鸿城",
+                englishName: "Cushion",
+                company: "淮安颖益机械有限公司",
+                title: "总经理",
+                category: "04",
+                subCategory: "机械制造/冲压设备",
+                club: "昆山社",
+                phone: "137 7319 3792",
+                wechat: "lhc933607858",
+                email: "13773193792@163.com",
+                rotaryRole: "昆山社2020-21社长/公共关系主委",
+                intro: "主营冲床防震装置、机器机架焊接制造加工。"
+            },
+            {
+                id: 8,
+                name: "张敏",
+                englishName: "Michael",
+                company: "江苏君之悦国旅",
+                title: "副总经理",
+                category: "09",
+                subCategory: "旅游服务",
+                club: "昆山社",
+                phone: "180 1267 7018",
+                wechat: "Michael-jzy0",
+                email: "1649614743@qq.com",
+                rotaryRole: "昆山社节目主委",
+                intro: "深耕旅游行业十三年，专注企业客户及中高端家庭一站式品质出行服务，涵盖差旅管理、私家旅行定制、年会团建、研学、高尔夫等。"
+            },
+            {
+                id: 9,
+                name: "李继超",
+                englishName: "Bruce",
+                company: "北京盈科(昆山)律师事务所",
+                title: "合伙人/律师",
+                category: "06",
+                subCategory: "律师/法律顾问",
+                club: "昆山社",
+                phone: "185 5055 0717",
+                wechat: "LJC18550550717",
+                email: "ljichao@yingkelawyer.com",
+                rotaryRole: "昆山社联谊主委",
+                intro: "合伙人律师，资本市场与股权事务部副主任。担任昆山、苏州多家公司法律顾问，处理数百起民商事案件。"
+            },
+            {
+                id: 10,
+                name: "陈俊男",
+                englishName: "Jeremy",
+                company: "苏州铨溢生电子科技有限公司",
+                title: "总经理",
+                category: "04",
+                subCategory: "电子制造/注塑成型",
+                club: "昆山社",
+                phone: "186 2629 9339",
+                wechat: "chunnan18626299339",
+                email: "chunnan@qys-sz.com",
+                rotaryRole: "昆山社社员发展主委",
+                intro: "专业薄件注塑成型。"
+            },
+            {
+                id: 11,
+                name: "王吕云",
+                englishName: "Angel",
+                company: "康弗琛投资",
+                title: "合伙人",
+                category: "03",
+                subCategory: "地产咨询/资产并购",
+                club: "昆山社",
+                phone: "139 1575 8700",
+                wechat: "wxid_qi2lgbr75nho12",
+                email: "35945642@qq.com",
+                rotaryRole: "昆山社扶轮青年主委",
+                intro: "业务涉及地产咨询、资产并购及不动产投资，致力于提供房地产服务和咨询顾问方案。"
+            },
+            {
+                id: 12,
+                name: "简金盛",
+                englishName: "Jay",
+                company: "台昕电子有限公司",
+                title: "总经理",
+                category: "04",
+                subCategory: "电子/材料加工",
+                club: "昆山社",
+                phone: "139 1575 6666",
+                wechat: "elewell",
+                email: "jay.chien@kstaixin.com.cn",
+                rotaryRole: "昆山社社员",
+                intro: "成立超过30年，专注于金属与橡胶材料包覆成型、背胶裁切、多色热压、铁件包覆与O型圈制造，产品应用涵盖笔电、咖啡机、汽车、智能音箱等消费电子。"
+            },
+            {
+                id: 13,
+                name: "陈彦豪",
+                englishName: "Flavor",
+                company: "上海芙迎佳国际贸易有限公司",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13818179636",
+                wechat: "13818179636",
+                email: "yenhaur_chen@hotmail.com",
+                rotaryRole: "虹桥社2024-25社长",
+                intro: "创业团队拥有超过30年食品从业经验，专注保健食品原料，自主研发4+2系列产品。"
+            },
+            {
+                id: 14,
+                name: "杨隽一",
+                englishName: "Anson",
+                company: "蒂升电梯(中国)",
+                title: "战略客户副总裁",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "虹桥社",
+                phone: "18017440026",
+                wechat: "18017440026",
+                email: "anson.yang@tkelevator.com",
+                rotaryRole: "虹桥社社长当选人/秘书长",
+                intro: "德国蒂升电梯中国区战略客户副总裁，26年B2B高科技和机械设备销售和市场开发经验。"
+            },
+            {
+                id: 15,
+                name: "崔镇远",
+                englishName: "Duke",
+                company: "法喜建筑设计(上海)有限公司",
+                title: "总经理",
+                category: "03",
+                subCategory: "地产/建筑",
+                club: "虹桥社",
+                phone: "13801985336",
+                wechat: "待补充",
+                email: "jerry@farsee.com.cn",
+                rotaryRole: "虹桥社公共形象主委/社长候选人",
+                intro: "台湾人，1997年来上海，建筑工程和室内设计，创办两家公司。"
+            },
+            {
+                id: 16,
+                name: "涂士雄",
+                englishName: "ST",
+                company: "沅亨流体科技(昆山)有限公司",
+                title: "副总经理",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "虹桥社",
+                phone: "13506260272",
+                wechat: "待补充",
+                email: "shawntu@jpeyh.com",
+                rotaryRole: "虹桥社2021-22社长/D52 2022-24 AG/2024-27 DRFC",
+                intro: "专业研发生产销售卡套接头、球阀、针阀等，产品应用于钢铁、石化、发电、半导体等产业。"
+            },
+            {
+                id: 17,
+                name: "周伯魁",
+                englishName: "Paul",
+                company: "上海久事智慧体育有限公司",
+                title: "资深顾问",
+                category: "09",
+                subCategory: "乐活/旅游",
+                club: "虹桥社",
+                phone: "13817369636",
+                wechat: "待补充",
+                email: "paul1116@gmail.com",
+                rotaryRole: "虹桥社2023-24甫卸任社长/D52 2024-25 DGSC",
+                intro: "台北市出生，2001年移居上海，从事体育/场馆产业。"
+            },
+            {
+                id: 18,
+                name: "刘雪华",
+                englishName: "Nives",
+                company: "Autel China Co.,Ltd.",
+                title: "总经理",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "虹桥社",
+                phone: "13916125543",
+                wechat: "待补充",
+                email: "autel@aeautel.cn",
+                rotaryRole: "虹桥社2022-23社长",
+                intro: "十多年从事环保领域工业除尘器核心部件：清灰系统的生产制造销售。品牌：意大利欧特尔。"
+            },
+            {
+                id: 19,
+                name: "杨蕙临",
+                englishName: "Lina",
+                company: "上海珈瑟贸易有限公司",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13916035270",
+                wechat: "待补充",
+                email: "yang3329@aliyun.com",
+                rotaryRole: "虹桥社创社社长",
+                intro: "1988年成立，主营外贸，高端包装礼品赠品业务，32年历史。"
+            },
+            {
+                id: 20,
+                name: "梁佳蓉",
+                englishName: "Amy",
+                company: "AjesGlobal Inc",
+                title: "董事长",
+                category: "03",
+                subCategory: "地产/建筑",
+                club: "虹桥社",
+                phone: "13818965591",
+                wechat: "qq1149187303",
+                email: "ajesglobali@gmail.com",
+                rotaryRole: "虹桥社扶轮知识委员",
+                intro: "台湾台北人，移居上海19年，大中华及东南亚房地产投资，涉及大健康产业，投资兔大师文旅公司。"
+            },
+            {
+                id: 21,
+                name: "沈姿莹",
+                englishName: "Ariel",
+                company: "至颖医疗集团",
+                title: "创始人/CEO",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "虹桥社",
+                phone: "18801809949",
+                wechat: "待补充",
+                email: "shenariel@qq.com",
+                rotaryRole: "虹桥社节目主委/D52培训促进主委",
+                intro: "25年横跨中美医疗体系管理经验，南加大医管硕士，创立至颖医疗集团，AI精准健康系统及私人健康管家。"
+            },
+            {
+                id: 22,
+                name: "洪兴文",
+                englishName: "Bowin",
+                company: "上海尚睿文化传播有限公司/陶艺后援会",
+                title: "总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "13816220600",
+                wechat: "待补充",
+                email: "bowin007@qq.com",
+                rotaryRole: "虹桥社职业发展主委",
+                intro: "台湾陶艺后援会创立于1985年，台北及上海设有艺术中心及体验教室，为陶艺家策划展览、销售、宣传。"
+            },
+            {
+                id: 23,
+                name: "丁诗蓉",
+                englishName: "Candy",
+                company: "招商银行上海分行",
+                title: "客户总监",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "虹桥社",
+                phone: "13331858630",
+                wechat: "待补充",
+                email: "candyting@cmbchina.com",
+                rotaryRole: "虹桥社服务计划主委",
+                intro: "东海大学历史系，2011年来上海，招商银行上海分行公司业务，招行上海唯一台湾人。"
+            },
+            {
+                id: 24,
+                name: "林士杰",
+                englishName: "York",
+                company: "上海大茂展览服务有限公司",
+                title: "总经理",
+                category: "11",
+                subCategory: "传媒/会展",
+                club: "虹桥社",
+                phone: "13916203778",
+                wechat: "待补充",
+                email: "york@sdmore.com",
+                rotaryRole: "虹桥社",
+                intro: "从台北到上海从事会展设计搭建业务20年。"
+            },
+            {
+                id: 25,
+                name: "甯君宇",
+                englishName: "02",
+                company: "萃本目(上海)商贸有限公司",
+                title: "经理",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "虹桥社",
+                phone: "13671654729",
+                wechat: "待补充",
+                email: "1216115873@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "从事茶行业传统行业，品牌名老二茶铺，家里三辈靠此行当营生。"
+            },
+            {
+                id: 26,
+                name: "林玉兰",
+                englishName: "Hedy",
+                company: "心蒙爱教育科技",
+                title: "创始人/CEO",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "虹桥社",
+                phone: "13661569720",
+                wechat: "+886930887001",
+                email: "hedymiu@qmail.com",
+                rotaryRole: "虹桥社",
+                intro: "国际/AI教育倡导者，AMI蒙特梭利认证教师，全球家庭教育规划导师。"
+            },
+            {
+                id: 27,
+                name: "苏怡荣",
+                englishName: "Hamu",
+                company: "合院建筑设计咨询",
+                title: "规划设计总监",
+                category: "03",
+                subCategory: "地产/建筑",
+                club: "虹桥社",
+                phone: "18621869399",
+                wechat: "hamu_su",
+                email: "yisu@me.com",
+                rotaryRole: "虹桥社",
+                intro: "台湾嘉义人，淡江大学建筑系，Club Foundation Chair 2025-2026。项目涵盖康桥国际学校、汶川地震重建等。"
+            },
+            {
+                id: 28,
+                name: "龚霁晴",
+                englishName: "Qianxun",
+                company: "待补充",
+                title: "待补充",
+                category: "09",
+                subCategory: "待补充",
+                club: "虹桥社",
+                phone: "13564526380",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "虹桥社",
+                intro: "待补充"
+            },
+            {
+                id: 29,
+                name: "谢定濂",
+                englishName: "Jay",
+                company: "韵康文化传播(上海)",
+                title: "摄影师",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "13817617449",
+                wechat: "jaymail0913",
+                email: "2846933928@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "台湾桃园出发，14年摄影经验，10万粉丝摄影博主，擅长婚纱、肖像、短视频。"
+            },
+            {
+                id: 30,
+                name: "蒋美兰",
+                englishName: "Milan",
+                company: "待补充",
+                title: "待补充",
+                category: "09",
+                subCategory: "待补充",
+                club: "虹桥社",
+                phone: "13917381110",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "虹桥社",
+                intro: "待补充"
+            },
+            {
+                id: 31,
+                name: "陈意涵",
+                englishName: "Ehan",
+                company: "上海台商子女学校",
+                title: "升学交流组长",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "虹桥社",
+                phone: "18321622655",
+                wechat: "待补充",
+                email: "chenyh@shtcs.com.cn",
+                rotaryRole: "虹桥社",
+                intro: "台北出生，2010年参与RYE扶轮青年交换计划，2022移居上海，专注台校双联学位与OSSD课程。"
+            },
+            {
+                id: 32,
+                name: "曾障婷",
+                englishName: "Tina",
+                company: "上海利统生化制品有限公司",
+                title: "营运长/研发长",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "虹桥社",
+                phone: "15618732679",
+                wechat: "jwt0707",
+                email: "jwt0707@yahoo.com.tw",
+                rotaryRole: "虹桥社2024-25扶轮知识主委",
+                intro: "台湾大学生化科技博士，专长延缓老化及健康食品功效性评估，台湾大学博士，上海食品学会理事。"
+            },
+            {
+                id: 33,
+                name: "沈磊",
+                englishName: "Amanda",
+                company: "友邦保险/USGTF",
+                title: "注册教练/资深代理人",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "虹桥社",
+                phone: "13916599905",
+                wechat: "待补充",
+                email: "13916599905@139.com",
+                rotaryRole: "虹桥社",
+                intro: "上海财经大学会计系，USGTF注册教练，友邦保险资深代理人，定制风险管理与财富规划方案。"
+            },
+            {
+                id: 34,
+                name: "吉",
+                englishName: "Jessica",
+                company: "上海开薪游旅游咨询有限公司",
+                title: "总经理",
+                category: "09",
+                subCategory: "乐活/旅游",
+                club: "虹桥社",
+                phone: "15618888006",
+                wechat: "15618888006",
+                email: "1195515363@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "创业20年，华为上海售后服务供应商10年以上，现从事酒店及大文旅行业。"
+            },
+            {
+                id: 35,
+                name: "沈佳佳",
+                englishName: "Jia-Jia",
+                company: "安徽开润股份有限公司",
+                title: "业务",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "虹桥社",
+                phone: "15001751321",
+                wechat: "15001751321",
+                email: "待补充",
+                rotaryRole: "虹桥社",
+                intro: "台湾高雄人，开润集团主营箱包产品，中国箱包行业首家A股上市公司。"
+            },
+            {
+                id: 36,
+                name: "章斌",
+                englishName: "Bin",
+                company: "元植永道(海南)数字文化发展有限公司",
+                title: "法人",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "13817417291",
+                wechat: "待补充",
+                email: "28807452@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "浙江绍兴人，跨界广告传媒、奢侈品管理、文旅、公益，计划成为欧文亚隆团体心理咨询师。"
+            },
+            {
+                id: 37,
+                name: "明建台",
+                englishName: "Cargo",
+                company: "安丽国际货运代理(上海)有限公司",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13916939222",
+                wechat: "待补充",
+                email: "fred@castleshanghai.com.cn",
+                rotaryRole: "虹桥社2018-19社长",
+                intro: "基隆海洋大学毕业，2002年到上海，2016年加入扶轮社。"
+            },
+            {
+                id: 38,
+                name: "马立仁",
+                englishName: "Carton",
+                company: "实隆集团",
+                title: "总经理",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "虹桥社",
+                phone: "13818924136",
+                wechat: "待补充",
+                email: "mlr@srcarton.com",
+                rotaryRole: "虹桥社服务计划委员",
+                intro: "主营各类产品包装设计及制造，瓦楞纸箱、纸板、缓冲材料等。"
+            },
+            {
+                id: 39,
+                name: "何诚",
+                englishName: "Cheng",
+                company: "上海冠妍贸易/上海百皇建筑工程",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13817873822",
+                wechat: "待补充",
+                email: "13817873822@163.com",
+                rotaryRole: "虹桥社节目委员",
+                intro: "待补充"
+            },
+            {
+                id: 40,
+                name: "郭智文",
+                englishName: "Fund",
+                company: "华创毅达(昆山)股权投资管理有限公司",
+                title: "投资业务部董事",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "虹桥社",
+                phone: "15618677912",
+                wechat: "待补充",
+                email: "vincent.kuo@cdibcapital.com",
+                rotaryRole: "虹桥社扶轮基金委员",
+                intro: "私募股权投资，擅长公司战略投融资规划、公司治理及董事会运作、上市辅导。"
+            },
+            {
+                id: 41,
+                name: "池永琦",
+                englishName: "Grace",
+                company: "联宇环保科技(上海)有限公司",
+                title: "总经理",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "虹桥社",
+                phone: "13916258688",
+                wechat: "待补充",
+                email: "gracechi@vip.sina.com",
+                rotaryRole: "虹桥社2020-21社长",
+                intro: "台北天母人，在上海独立创业20年，从事高端家用/商用净水处理系统及滤材研发销售。Berkshire Hathaway/KX Technologies中国总代理。"
+            },
+            {
+                id: 42,
+                name: "蓝绍文",
+                englishName: "Jack",
+                company: "宏基电脑股份有限公司/倚天酷科技",
+                title: "中国区COO/总经理",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "虹桥社",
+                phone: "13916958324",
+                wechat: "待补充",
+                email: "Jack.Lan@acer.com",
+                rotaryRole: "虹桥社职业服务主委",
+                intro: "台大国企业所，20多年科技产业经验，推动宏基从产品品牌转型为科技、智慧生活品牌。"
+            },
+            {
+                id: 43,
+                name: "吴文中",
+                englishName: "James",
+                company: "朔风创新技术(深圳)有限公司",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13816844008",
+                wechat: "待补充",
+                email: "James@Setfonecom",
+                rotaryRole: "虹桥社公共形象委员",
+                intro: "台湾出生美国生活，从事电商工作超过20年，关注消费市场产品。"
+            },
+            {
+                id: 44,
+                name: "梁子豪",
+                englishName: "Jerry",
+                company: "上海涤生医疗",
+                title: "创始人/医疗总监",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "虹桥社",
+                phone: "18601699767",
+                wechat: "drfatcat",
+                email: "860495926@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "台湾外科专科医师，前台北国泰医院外科主治医师，美国抗衰老医学院认证医师，专长外科手术、抗衰老医学、功能医学。"
+            },
+            {
+                id: 45,
+                name: "连冠溢",
+                englishName: "Kevsta",
+                company: "麦可将两岸文创园区",
+                title: "副总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "13917216173",
+                wechat: "待补充",
+                email: "2382449552@qq.com",
+                rotaryRole: "虹桥社纠察委员",
+                intro: "上海麦可将针织织造11年，江西度假村建设4年，上海文创园建设改造5年。"
+            },
+            {
+                id: 46,
+                name: "王忆祺",
+                englishName: "KK",
+                company: "TX3品牌",
+                title: "创始人",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "虹桥社",
+                phone: "13681616060",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "虹桥社创社社友",
+                intro: "曾任扶轮中国地区培训主委，全球三大咨询公司资深顾问，BMW认证培训师，从事商业咨询与培训逾20年。"
+            },
+            {
+                id: 47,
+                name: "洪静菁",
+                englishName: "Monalisa",
+                company: "美伦文化创意(上海)有限公司",
+                title: "总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "15821976568",
+                wechat: "hungchingching25",
+                email: "2262481293@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "明道中学美工科，巴黎ESMOD时装设计，跨艺术文化行业，服务诚品书局、历史博物馆等。"
+            },
+            {
+                id: 48,
+                name: "雷詠娴",
+                englishName: "Samantha",
+                company: "硕邦国际货运代理(上海)有限公司",
+                title: "总经理",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "虹桥社",
+                phone: "13671894426",
+                wechat: "待补充",
+                email: "samathalei@tvlgroups.com",
+                rotaryRole: "虹桥社服务计划主委",
+                intro: "专做国际物流/贸易代理/二手设备、化妆品、预包装食品进口通关等。"
+            },
+            {
+                id: 49,
+                name: "陆又榛",
+                englishName: "Sheena",
+                company: "Swedbrand Packaging",
+                title: "平面设计",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "虹桥社",
+                phone: "13774205967",
+                wechat: "待补充",
+                email: "1425659000@qq.com",
+                rotaryRole: "虹桥社",
+                intro: "上海新住民，专业纸类包装设计近10年。"
+            },
+            {
+                id: 50,
+                name: "萧又诚",
+                englishName: "York",
+                company: "待补充",
+                title: "待补充",
+                category: "09",
+                subCategory: "待补充",
+                club: "虹桥社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "虹桥社扶轮知识委员",
+                intro: "待补充"
+            },
+            {
+                id: 51,
+                name: "刘亦展",
+                englishName: "RB",
+                company: "麦可将文化创意发展有限公司",
+                title: "总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "古北社",
+                phone: "18721951945",
+                wechat: "liuchiapin",
+                email: "3233143580@qq.com",
+                rotaryRole: "古北社2021-22社长/社员发展主委/D52 AG",
+                intro: "闲置资产活化优质服务商，自营麦可将文旅村、纸箱王主题世界等生态内容。"
+            },
+            {
+                id: 52,
+                name: "丁绅宏",
+                englishName: "GENKI",
+                company: "亿绩商贸(上海)有限公司",
+                title: "总经理",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "古北社",
+                phone: "13817556889",
+                wechat: "eikitei",
+                email: "eikitei@163.com",
+                rotaryRole: "古北社2024-25社长/理事",
+                intro: "总代理韩国威博生物科技公司，20年营养品生产专业厂，提供OEM/ODM客制化贴牌服务。"
+            },
+            {
+                id: 53,
+                name: "陈一志",
+                englishName: "Event",
+                company: "巨唐设计整合有限公司",
+                title: "总经理",
+                category: "11",
+                subCategory: "传媒/会展",
+                club: "古北社",
+                phone: "13816835711",
+                wechat: "13816835711",
+                email: "708872619@qq.com",
+                rotaryRole: "古北社社长当选人/友好社主委/理事",
+                intro: "96年从事舞台灯光音响设备规划执行，至今上千场演出及活动执行经验。"
+            },
+            {
+                id: 54,
+                name: "黄大又",
+                englishName: "Education",
+                company: "HYPS留学",
+                title: "执行长",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "古北社",
+                phone: "15692121050",
+                wechat: "15692121050",
+                email: "15692121050@163.com",
+                rotaryRole: "古北社秘书长/社长候选人/D52新世代服务副主委",
+                intro: "哈佛、耶鲁、斯坦福等名校导师亲授，定制升学规划。2024-25本科录取5个第一。"
+            },
+            {
+                id: 55,
+                name: "祝寿康",
+                englishName: "Doctor",
+                company: "上海慈济中医诊所",
+                title: "中医师",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "古北社",
+                phone: "18701713620",
+                wechat: "15000793993",
+                email: "15000793993@163.com",
+                rotaryRole: "古北社2023-24甫卸任社长/财务长/理事",
+                intro: "家中数代行医，中国医药大学，中西皆有涉猎。"
+            },
+            {
+                id: 56,
+                name: "尹忠三",
+                englishName: "DBA",
+                company: "植适美(上海)医疗科技有限公司",
+                title: "总经理",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "古北社",
+                phone: "18616237790",
+                wechat: "jimmy00048",
+                email: "1760439918@qq.com",
+                rotaryRole: "古北社2022-23社长/扶轮基金主委",
+                intro: "企管博士，30年口腔医疗行业营运合伙人经验。"
+            },
+            {
+                id: 57,
+                name: "陈国扬",
+                englishName: "Michea",
+                company: "台湾丰奕/上海奕堡环境工程",
+                title: "负责人/总经理",
+                category: "09",
+                subCategory: "乐活/旅游",
+                club: "古北社",
+                phone: "13371913860",
+                wechat: "13371913860",
+                email: "1051865713@qq.com",
+                rotaryRole: "古北社2020-21社长/纠察主委",
+                intro: "高尔夫球场设计、社群网络营销、抗衰老跨国电商、康养大健康、旅游景区规划。东海大学景观建筑硕士。"
+            },
+            {
+                id: 58,
+                name: "陈信安",
+                englishName: "Aroma",
+                company: "ADVITAM艾薇丹/上海果艇文化等",
+                title: "联合创始人/执行董事",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "古北社",
+                phone: "15000572727",
+                wechat: "xin777727",
+                email: "xin727@zhixinaroma.com",
+                rotaryRole: "古北社2019-20社长/D52地区联谊主委/PAG",
+                intro: "ADVITAM艾薇丹天然有机精油，大中国区唯一欧盟有机双认证。打造专项特殊运动中心。"
+            },
+            {
+                id: 59,
+                name: "陈家宏",
+                englishName: "Jimmy",
+                company: "上海虹桥国际外籍人员子女学校",
+                title: "开发总经理/董事",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "古北社",
+                phone: "18501625670",
+                wechat: "18501625670",
+                email: "jimmy1024168@163.com",
+                rotaryRole: "古北社2018-19创社长/D52新世代服务主委",
+                intro: "猫头鹰大联盟创始人，台协文化教育工委会艺术特长教育类组长。"
+            },
+            {
+                id: 60,
+                name: "陈伯乐",
+                englishName: "Paul",
+                company: "待补充",
+                title: "待补充",
+                category: "01",
+                subCategory: "待补充",
+                club: "古北社",
+                phone: "13817029389",
+                wechat: "13817029389",
+                email: "13817029389@163.com",
+                rotaryRole: "古北社宝眷主委/理事/洛杉矶代表",
+                intro: "IT软件/IC芯片/Retail零售/Investment投资。"
+            },
+            {
+                id: 61,
+                name: "张剑",
+                englishName: "Coffee",
+                company: "麦多(上海)商贸/麦开迈文创等",
+                title: "董事长",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "古北社",
+                phone: "18116127177",
+                wechat: "chinakenwin",
+                email: "445657005@qq.com",
+                rotaryRole: "古北社节目主委",
+                intro: "2010年留日回国，创立麦多咖啡品牌，服务世界500强。绍兴国稀酒酿造东方黄酒布道者。"
+            },
+            {
+                id: 62,
+                name: "从士兰",
+                englishName: "Howard",
+                company: "TAM国际艺术教学中心",
+                title: "动画导演/制片人",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "古北社",
+                phone: "18621305656",
+                wechat: "Howardthesquirrel",
+                email: "1497774978@qq.com",
+                rotaryRole: "古北社炉边主委",
+                intro: "艺术设计留学咨询与辅导，承接动画制作、绘本插画、影视编辑等项目。"
+            },
+            {
+                id: 63,
+                name: "黄国翔",
+                englishName: "Kenny",
+                company: "上海注春餐饮管理有限公司",
+                title: "总经理",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "古北社",
+                phone: "15800337458",
+                wechat: "skyone-888",
+                email: "kenny711210@163.com",
+                rotaryRole: "古北社副主委",
+                intro: "十年企业管理与战略规划，创立注春人文茶饮品牌，开创百余家门店。"
+            },
+            {
+                id: 64,
+                name: "李汉柏",
+                englishName: "Wilbur",
+                company: "上海世竹实业-共禾京品",
+                title: "总经理",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "古北社",
+                phone: "13032136105",
+                wechat: "13032136105",
+                email: "wilburlhp@qq.com",
+                rotaryRole: "古北社职业服务主委",
+                intro: "MBA，20年零售业经验，曾任BoConcept、家乐福等全球连锁零售品牌。"
+            },
+            {
+                id: 65,
+                name: "邢丽",
+                englishName: "Jenna",
+                company: "本觉设计事务所",
+                title: "创意视觉负责人",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "古北社",
+                phone: "13122855383",
+                wechat: "JieNa031226",
+                email: "1219804827@qq.com",
+                rotaryRole: "古北社公共形象主委",
+                intro: "擅长品牌策划、视觉定位、美学陈列、空间家居搭配，2024年揽获上海设计周三项大奖。"
+            },
+            {
+                id: 66,
+                name: "杨心蕊",
+                englishName: "Cindy",
+                company: "待补充",
+                title: "待补充",
+                category: "02",
+                subCategory: "待补充",
+                club: "古北社",
+                phone: "13681765261",
+                wechat: "13681765261",
+                email: "adayangxinrui@qq.com",
+                rotaryRole: "古北社联谊主委",
+                intro: "台北大学华东校友会理事，金融专业背景，资本市场股权领域为台商台企服务。"
+            },
+            {
+                id: 67,
+                name: "李克峰",
+                englishName: "Steven",
+                company: "台湾京程科技/青岛怡禾农",
+                title: "首席代表",
+                category: "13",
+                subCategory: "农渔/农业",
+                club: "古北社",
+                phone: "15221279199",
+                wechat: "leekerfeng",
+                email: "98runxcan@qmail.com",
+                rotaryRole: "古北社社务顾问",
+                intro: "两岸震旦集团30年高层，南京云锦博物馆副馆长，纳米材料应用，青岛农牧果绿色循环基地。"
+            },
+            {
+                id: 68,
+                name: "徐嬉",
+                englishName: "Sia",
+                company: "上海桃嬉文化创意有限公司",
+                title: "总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "古北社",
+                phone: "18301981229",
+                wechat: "Hsusi_Sia",
+                email: "hsusi_sia@qq.com",
+                rotaryRole: "古北社公共形象副主委",
+                intro: "艺术品买卖，大学艺术作品集教学，台湾/日本/希腊海外地产投资。"
+            },
+            {
+                id: 69,
+                name: "邵琦",
+                englishName: "Maggie",
+                company: "上海旌榜文化发展有限公司",
+                title: "总经理",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "古北社",
+                phone: "18616830783",
+                wechat: "18616830783",
+                email: "maggieshao@elitetalent.cn",
+                rotaryRole: "古北社",
+                intro: "ICF认证教练，麦肯锡德勤特聘教练，国际教练联合会认证，用AI技术为企业获客和成交服务。"
+            },
+            {
+                id: 70,
+                name: "彭筱剑",
+                englishName: "Lawyer",
+                company: "上海市君悦律师事务所",
+                title: "高级合伙人",
+                category: "06",
+                subCategory: "法律/政务",
+                club: "古北社",
+                phone: "13917324836",
+                wechat: "rachelpxj",
+                email: "13917324836@163.com",
+                rotaryRole: "古北社",
+                intro: "君悦是全国优秀律所、上海十佳所，泛公司法领域企业全生命周期服务提供者。"
+            },
+            {
+                id: 71,
+                name: "周海康",
+                englishName: "Jack",
+                company: "上海康爽贸易等",
+                title: "董事长",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "古北社",
+                phone: "13482238209",
+                wechat: "kangkang__zhou",
+                email: "kang_lin@qq.com",
+                rotaryRole: "古北社扶轮知识主委",
+                intro: "上海互助公益创始人，医疗药品器械消毒产品供应商，多个公益组织理事。"
+            },
+            {
+                id: 72,
+                name: "张珊珊",
+                englishName: "Uta",
+                company: "香港爱迪亚设计/上海悟奇文创",
+                title: "合伙人/创意总监",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "古北社",
+                phone: "18616920533",
+                wechat: "utachang",
+                email: "2514493625@qq.com",
+                rotaryRole: "古北社友好社副主委",
+                intro: "设计执业超16年，专注儿童、文创礼品设计，迪士尼授权产品开发，意大利Moleskine中国区合作设计团队。"
+            },
+            {
+                id: 73,
+                name: "颜孝颖",
+                englishName: "Roger",
+                company: "苏州华佳纸制品有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13606206727",
+                wechat: "gan372007",
+                email: "gan72007@gmail.com",
+                rotaryRole: "文华社2024-25社长",
+                intro: "纸板、纸箱、工业包装，专业生产设计制造，配合世界知名企业品牌供货体系。"
+            },
+            {
+                id: 74,
+                name: "凌宗",
+                englishName: "Marcc",
+                company: "苏州启琳五金电器有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13771833086",
+                wechat: "lingzongwei",
+                email: "president@cherub-china.com",
+                rotaryRole: "文华社社长当选人/财务长",
+                intro: "五金冲压、金属粉体涂装、塑胶射出，主要产品窗饰零配件、家用配电箱。"
+            },
+            {
+                id: 75,
+                name: "谢兆达",
+                englishName: "Jordan",
+                company: "阿巴达健康生活馆",
+                title: "待补充",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "文华社",
+                phone: "13776086608",
+                wechat: "jordan-s",
+                email: "sjordan@ms17.hinet.net",
+                rotaryRole: "文华社创社社长/扶轮知识主委/国际服务主委",
+                intro: "高压氧舱改善慢性病/亚健康，功能性食品预防心梗脑梗、前列腺、肠胃健康。"
+            },
+            {
+                id: 76,
+                name: "戴晓文",
+                englishName: "Daisy",
+                company: "投资公司(VC)/海外教育",
+                title: "待补充",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "文华社",
+                phone: "13761695998",
+                wechat: "daisydai0011999",
+                email: "13761695998@163.com",
+                rotaryRole: "文华社2018-19社长",
+                intro: "投资公司美、台、德等外资企业高管(VP)。"
+            },
+            {
+                id: 77,
+                name: "赵家贤",
+                englishName: "Aaron",
+                company: "晟峰精密工业(苏州)有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13862020818",
+                wechat: "holyanswer70730",
+                email: "aaronchao.sz@acry.cn",
+                rotaryRole: "文华社2019-20社长/秘书长/地区服务主委",
+                intro: "自家企业，主业塑胶产品设计生产制造，与世界知名企业合作30年。喜马拉雅玫瑰盐灯开发者。"
+            },
+            {
+                id: 78,
+                name: "陈宏明",
+                englishName: "Jess",
+                company: "苏州思萃工业大数据技术研究所",
+                title: "待补充",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "文华社",
+                phone: "13625282650",
+                wechat: "smjess",
+                email: "chenhm@lookme-t.com",
+                rotaryRole: "文华社2020-21社长",
+                intro: "围绕电子信息、生物医药、装备制造、先进材料四大产业，研发自主可控数据软件、云计算、智能制造。"
+            },
+            {
+                id: 79,
+                name: "张雅蕾",
+                englishName: "Amy",
+                company: "苏州妮菲雅健康管理咨询有限公司",
+                title: "待补充",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "文华社",
+                phone: "15962451847",
+                wechat: "yaleichang",
+                email: "15962451847@139.com",
+                rotaryRole: "文华社2021-22社长/纠察主委",
+                intro: "健康管理咨询。"
+            },
+            {
+                id: 80,
+                name: "黄盈智",
+                englishName: "Charles",
+                company: "上海友联保险经纪有限公司",
+                title: "待补充",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "文华社",
+                phone: "13616232606",
+                wechat: "woxiangshuodeshi123",
+                email: "782556283@qq.com",
+                rotaryRole: "文华社2022-23社长/社员发展主委/AG",
+                intro: "2000年开始从事保险行业，提供人寿保险、财产保险、企业风险管理、健康保险等全方位服务。"
+            },
+            {
+                id: 81,
+                name: "杨玉婷",
+                englishName: "Yuting",
+                company: "永新电子(常熟)有限公司",
+                title: "执行董事",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13906233624",
+                wechat: "yt13906233624",
+                email: "yxyt@yxeplating.com",
+                rotaryRole: "文华社2023-24甫卸任社长/服务主委",
+                intro: "连续式电镀(镍、金、锡、钯)，以接插件为主的电子元器件电镀，苏州常熟厂+四川遂宁厂。"
+            },
+            {
+                id: 82,
+                name: "都威动",
+                englishName: "Blake",
+                company: "昆山群森纸制品有限公司等",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "15950058869",
+                wechat: "blake8869",
+                email: "blake@alenbag.cn",
+                rotaryRole: "文华社社友",
+                intro: "专业服装设计制造、纸制品印刷制造、皮件箱包制造、电子产品散热风扇制造，多事业体经营。"
+            },
+            {
+                id: 83,
+                name: "陈德全",
+                englishName: "Jaymes",
+                company: "科品斯(苏州)净化有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13013772988",
+                wechat: "jaymestan",
+                email: "Jaymestan@crobes.com",
+                rotaryRole: "文华社社友",
+                intro: "半导体/制药行业洁净室测试及相关测试设备销售服务。"
+            },
+            {
+                id: 84,
+                name: "颜孝儒",
+                englishName: "Fish",
+                company: "苏州华佳纸制品有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "15962221922",
+                wechat: "fishyen1985",
+                email: "fishyen1985@outlook.com",
+                rotaryRole: "文华社社友",
+                intro: "纸板、纸箱、工业包装，专业生产设计制造。"
+            },
+            {
+                id: 85,
+                name: "高文崇",
+                englishName: "Freddy",
+                company: "易力联测电子科技(上海)有限公司",
+                title: "待补充",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "文华社",
+                phone: "15814003777",
+                wechat: "freddykwc",
+                email: "freddy680316@gmail.com",
+                rotaryRole: "文华社社友",
+                intro: "主营半导体测试设备(AOI/电测/维修)，负责中国区销售。自营精酿啤酒。"
+            },
+            {
+                id: 86,
+                name: "赵青澧",
+                englishName: "Patrick",
+                company: "全意科技(浙江)有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13812792302",
+                wechat: "gan372007",
+                email: "patrick.chao@hpsunite.com",
+                rotaryRole: "文华社社友",
+                intro: "主营机械类型传动元件，应用于自动化、半导体、医疗、机器人、新能源、电动车等产业。"
+            },
+            {
+                id: 87,
+                name: "李宜泓",
+                englishName: "Yihong",
+                company: "方洽医疗器械(南京)有限公司",
+                title: "副总经理",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "文华社",
+                phone: "13862071620",
+                wechat: "leeihung0321",
+                email: "three7080@outlook.com",
+                rotaryRole: "文华社社友",
+                intro: "与Varian合作超40年，主营癌症肿瘤放射治疗设备投放及科室管理运营。"
+            },
+            {
+                id: 88,
+                name: "刘俊杰",
+                englishName: "Bill",
+                company: "雅仕昊机电工程有限公司",
+                title: "待补充",
+                category: "03",
+                subCategory: "地产/建筑",
+                club: "文华社",
+                phone: "18606270430",
+                wechat: "liujunjie712276",
+                email: "YASHIHAO@163.COM",
+                rotaryRole: "文华社社友",
+                intro: "规划设计咨询、机电设备工程、空调通风、净化车间、室内装饰工程。"
+            },
+            {
+                id: 89,
+                name: "简碧凤",
+                englishName: "Peggy",
+                company: "易思脑诊所",
+                title: "待补充",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "文华社",
+                phone: "18551206289",
+                wechat: "irp1117",
+                email: "m18551206289@163.com",
+                rotaryRole: "文华社社友/联谊主委",
+                intro: "运用神经回馈技术，帮助多动、自闭、焦虑、抑郁、失眠等，以非侵入式脑机接口进行大脑训练。"
+            },
+            {
+                id: 90,
+                name: "蔡来兴",
+                englishName: "Michael",
+                company: "果栗智造(上海)技术股份有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "18862244244",
+                wechat: "sz18862244244",
+                email: "michael@golytec.com",
+                rotaryRole: "文华社社友/节目主委",
+                intro: "生产研发磁悬浮流水线和智能输送系统。"
+            },
+            {
+                id: 91,
+                name: "林靖崴",
+                englishName: "Eric",
+                company: "昆山中扬包装材料有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13773195809",
+                wechat: "13773195809",
+                email: "ericlin886@hotmail.com",
+                rotaryRole: "文华社社友",
+                intro: "生产电脑及周边产品包装材料，EPE缓冲材、泡棉、瓦楞纸板/纸箱/印刷等。"
+            },
+            {
+                id: 92,
+                name: "张家昇",
+                englishName: "Lao Bu",
+                company: "博磊精密设备(苏州)有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "13404241795",
+                wechat: "brettbu",
+                email: "clockz@gmail.com",
+                rotaryRole: "文华社社友",
+                intro: "代理销售台湾博磊自制设备与材料（晶圆切割机、BGA植球机等），半导体封测设备耗材。"
+            },
+            {
+                id: 93,
+                name: "赵传",
+                englishName: "Emma",
+                company: "苏州朵涞文化创意有限公司",
+                title: "待补充",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "文华社",
+                phone: "15121018892",
+                wechat: "wocaishimagiduo",
+                email: "xy_8219@163.com",
+                rotaryRole: "文华社社友",
+                intro: "复旦大学，2019年创立，深耕数字内容、多媒体创意、文旅策划、品牌咨询及展览展示。"
+            },
+            {
+                id: 94,
+                name: "张维哲",
+                englishName: "Wei-Che",
+                company: "苏州上格五金有限公司",
+                title: "待补充",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "文华社",
+                phone: "15371876089",
+                wechat: "xc4125678",
+                email: "sztpjx@163.com",
+                rotaryRole: "文华社社友",
+                intro: "专业生产各类紧固件螺丝，主力供应日系空调品牌30余年。"
+            },
+            {
+                id: 95,
+                name: "吴昌穆",
+                englishName: "Wilson",
+                company: "苏州泰和电子科技/富商包装(苏州)",
+                title: "待补充",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "文华社",
+                phone: "15050133463",
+                wechat: "changmuwu",
+                email: "1141751990@qq.com",
+                rotaryRole: "文华社社友",
+                intro: "工业用纸进出口、工业包装设计与生产加工、资产管理与投资。"
+            },
+            {
+                id: 96,
+                name: "林绫琳",
+                englishName: "Lily",
+                company: "宁波利邦国际贸易有限公司",
+                title: "待补充",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "文华社",
+                phone: "13771986601",
+                wechat: "lilyowc",
+                email: "lily.lin@metrcn.com",
+                rotaryRole: "文华社社友",
+                intro: "主营进口代理、技术推广、国内售卖，代理泵浦、控制阀、自动控制、管路配件及仪錶等。"
+            },
+            {
+                id: 97,
+                name: "黄崇璋",
+                englishName: "Mike",
+                company: "苏州工业园区妘芮医疗美容诊所",
+                title: "待补充",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "文华社",
+                phone: "13451620166",
+                wechat: "mike0630",
+                email: "Mikehuang0630@126.com",
+                rotaryRole: "文华社社友",
+                intro: "医疗美容与生活美容、发泡绵缓冲包装材料、0-8岁亲子游泳教育培训。"
+            },
+            {
+                id: 98,
+                name: "万洪君",
+                englishName: "Wan",
+                company: "苏州朵涞文化创意有限公司",
+                title: "总经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "扶新社",
+                phone: "13818344722",
+                wechat: "wanhungchun",
+                email: "wan.w@dorai.cn",
+                rotaryRole: "扶新社2024-25社长",
+                intro: "品牌创意策划公司，以艺术联合技为主导，提供定制化品牌文化与形象解决方案。"
+            },
+            {
+                id: 99,
+                name: "马立轩",
+                englishName: "Philip",
+                company: "江童(上海)科技有限公司",
+                title: "投融资总监",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "扶新社",
+                phone: "13818123153",
+                wechat: "malixuan668",
+                email: "lixuanma@hotmail.com",
+                rotaryRole: "扶新社社友",
+                intro: "致力于水上自动驾驶，复旦大学台湾校友会副秘书长，聚焦在沪台青创业就业服务。"
+            },
+            {
+                id: 100,
+                name: "林德修",
+                englishName: "Jerry",
+                company: "上海兰迪律师事务所",
+                title: "高级合伙人",
+                category: "06",
+                subCategory: "法律/政务",
+                club: "扶新社",
+                phone: "16602176499",
+                wechat: "jerry8152",
+                email: "wan.w@dorai.cn",
+                rotaryRole: "扶新社社长当选人",
+                intro: "境内外民商事争议解决、股权基金纠纷、公司治理，承办大量金融纠纷等案件。"
+            },
+            {
+                id: 101,
+                name: "王彦中",
+                englishName: "Edwy",
+                company: "上海山越相册有限公司",
+                title: "业务经理",
+                category: "10",
+                subCategory: "文创/艺术",
+                club: "扶新社",
+                phone: "18101816112",
+                wechat: "wanhungchun",
+                email: "edwywang@163.com",
+                rotaryRole: "扶新社社友",
+                intro: "热衷影像行业，30年从事开发设计制造影像后期产品，相册、相框、海报、艺术装裱等。"
+            },
+            {
+                id: 102,
+                name: "禹宇",
+                englishName: "Yuyu",
+                company: "大禹自然",
+                title: "创始人",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "扶新社",
+                phone: "13801816721",
+                wechat: "待补充",
+                email: "22509848@qq.com",
+                rotaryRole: "扶新社社友",
+                intro: "超15年儿童户外教育经验，上海多所国际学校户外老师，全国Bushcraft大会创始人。"
+            },
+            {
+                id: 103,
+                name: "金阳",
+                englishName: "Ferry",
+                company: "苏利亚健康管理",
+                title: "Healer/Teacher",
+                category: "05",
+                subCategory: "医疗/健康",
+                club: "香江社",
+                phone: "18611124584",
+                wechat: "18611124584",
+                email: "Ferry.rebergen@hotmail.nl",
+                rotaryRole: "香江社2024-25社长",
+                intro: "Magnetic Healing, Reiki Healing, Meditation, Vedantic Philosophy and Yoga."
+            },
+            {
+                id: 104,
+                name: "高畅",
+                englishName: "Tina",
+                company: "北京乾坤信息技术有限公司",
+                title: "总经理",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "香江社",
+                phone: "13263191441",
+                wechat: "13263191441",
+                email: "gaochang@qiankun2014.com",
+                rotaryRole: "香江社秘书长/社长当选人",
+                intro: "企业信息化建设和升级改造以及数字化转型项目实施，提供ITO技术人才及项目承接。"
+            },
+            {
+                id: 105,
+                name: "张佳音",
+                englishName: "Julie",
+                company: "财务咨询管理公司",
+                title: "合伙人",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "香江社",
+                phone: "13520829185",
+                wechat: "jz13520829185",
+                email: "jzpwc2007@hotmail.com",
+                rotaryRole: "香江社社长候选人/联谊主委/创社社员",
+                intro: "让上市小型私有企业的财务规划管理咨询。"
+            },
+            {
+                id: 106,
+                name: "王东平",
+                englishName: "Becky",
+                company: "北京乐予慈善基金会/北京思诚社区公益基金会",
+                title: "管委会成员",
+                category: "06",
+                subCategory: "法律/政务",
+                club: "香江社",
+                phone: "13701260658",
+                wechat: "beckyxiao666",
+                email: "beckyxiao@yahoo.com",
+                rotaryRole: "香江社扶轮知识主委/创社社长",
+                intro: "慈善商店、社区公益平台，儿童医疗救助和教育救助。"
+            },
+            {
+                id: 107,
+                name: "梁稚棠",
+                englishName: "Arlene",
+                company: "待补充",
+                title: "待补充",
+                category: "08",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13901058711",
+                wechat: "zhitang1123b",
+                email: "zhitang1123b@outlook.com",
+                rotaryRole: "香江社纠察长/2023-24甫卸任社长/创社社员",
+                intro: "蒙台梭里儿童教育，外企工作数年，艺术品鉴赏及投资，开过画廊。"
+            },
+            {
+                id: 108,
+                name: "王虹",
+                englishName: "Lily",
+                company: "待补充",
+                title: "待补充",
+                category: "08",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "15801208177",
+                wechat: "hexiaoshuangyu",
+                email: "763407526@qq.com",
+                rotaryRole: "香江社纠察",
+                intro: "教育行业。"
+            },
+            {
+                id: 109,
+                name: "林莹",
+                englishName: "Lynn",
+                company: "待补充",
+                title: "退休",
+                category: "02",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13901357085",
+                wechat: "待补充",
+                email: "Moxinzhai@foxmail.com",
+                rotaryRole: "香江社财务",
+                intro: "擅长书法，有很强号召力、凝聚力及执行力。"
+            },
+            {
+                id: 110,
+                name: "赵群",
+                englishName: "Quinn",
+                company: "北京东方二十一文化传媒有限公司",
+                title: "总经理",
+                category: "11",
+                subCategory: "传媒/会展",
+                club: "香江社",
+                phone: "15801232139",
+                wechat: "15910828717",
+                email: "956900823@qq.com",
+                rotaryRole: "香江社节目主委",
+                intro: "音乐版权、演唱会、音乐节、影视、戏剧、艺人经纪。"
+            },
+            {
+                id: 111,
+                name: "王燕",
+                englishName: "Nellie",
+                company: "北京正和新生代科技发展有限公司",
+                title: "待补充",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "香江社",
+                phone: "13801067444",
+                wechat: "WY13801067444",
+                email: "wangyanhelpinghand@outlook.com",
+                rotaryRole: "香江社社员发展主委/前社长/创社社员",
+                intro: "亲子幸福教育，终身成长与领导力培训。"
+            },
+            {
+                id: 112,
+                name: "许学凤",
+                englishName: "待补充",
+                company: "待补充",
+                title: "私人投资者",
+                category: "02",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13811542200",
+                wechat: "Xuefeng-bi",
+                email: "xuefeng98bj@outlook.com",
+                rotaryRole: "香江社扶轮知识委员/创社社员",
+                intro: "私人投资者，众爱慈善店义工。"
+            },
+            {
+                id: 113,
+                name: "杜娟",
+                englishName: "Juan Du",
+                company: "待补充",
+                title: "待补充",
+                category: "10",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13911902699",
+                wechat: "13911902699",
+                email: "dujuan@hotmail.com",
+                rotaryRole: "香江社联谊委员/创社社员",
+                intro: "中国传统刺绣艺术的坚守者和推进者。"
+            },
+            {
+                id: 114,
+                name: "王新",
+                englishName: "Eva",
+                company: "待补充",
+                title: "歌唱家",
+                category: "09",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13911982580",
+                wechat: "待补充",
+                email: "Evawx888@hotmail.com",
+                rotaryRole: "香江社节目委员/创社社员",
+                intro: "歌唱家。"
+            },
+            {
+                id: 115,
+                name: "黄瑞容",
+                englishName: "Rey",
+                company: "台北香邨",
+                title: "主理人",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "香江社",
+                phone: "13901182436",
+                wechat: "13901182436",
+                email: "rey_huang518@126.com",
+                rotaryRole: "香江社服务计划主委",
+                intro: "曾在国际学校、500强外企工作多年，退休后从事古董家具收藏跨界室内、珠宝设计，致力于美食餐饮。"
+            },
+            {
+                id: 116,
+                name: "彭敏",
+                englishName: "Maria",
+                company: "香港荣信远东集团/尚汇国际教育集团",
+                title: "董事长/联合创办人",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "香江社",
+                phone: "15313462678",
+                wechat: "15313462678",
+                email: "xiaoyingtao212@126.com",
+                rotaryRole: "香江社社员发展委员",
+                intro: "多个社会职务：WMF国际顾问委员会委员、唐颐是之医学研究院副理事长等。"
+            },
+            {
+                id: 117,
+                name: "Joyce",
+                englishName: "Nishi",
+                company: "待补充",
+                title: "Private investor",
+                category: "02",
+                subCategory: "待补充",
+                club: "香江社",
+                phone: "13811542448",
+                wechat: "待补充",
+                email: "joycenishi@icloud.com",
+                rotaryRole: "香江社扶轮基金主委/前社长",
+                intro: "Private investor & philanthropy."
+            },
+            {
+                id: 118,
+                name: "张冉",
+                englishName: "Ran Ran",
+                company: "明亚保险经纪公司",
+                title: "保险经纪人",
+                category: "02",
+                subCategory: "金融/保险",
+                club: "香江社",
+                phone: "13911125529",
+                wechat: "13911125529",
+                email: "Lucy_ran@163.com",
+                rotaryRole: "香江社服务计划委员",
+                intro: "主要从事养老规划、高端医疗、保险信托。"
+            },
+            {
+                id: 119,
+                name: "张亮",
+                englishName: "Liang",
+                company: "北京铂岩朗矿冶技术有限公司",
+                title: "市场部经理",
+                category: "04",
+                subCategory: "制造/工业",
+                club: "香江社",
+                phone: "13811762660",
+                wechat: "13811762660",
+                email: "1400831848@qq.com",
+                rotaryRole: "香江社社区服务主委",
+                intro: "矿山机械设备出口，技术支持。Freelanced Milliner。"
+            },
+            {
+                id: 120,
+                name: "钱素兰",
+                englishName: "Sulan",
+                company: "北京百合春天SPA会所",
+                title: "董事长",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "香江社",
+                phone: "13801085542",
+                wechat: "待补充",
+                email: "Sulanqian@qq.com",
+                rotaryRole: "香江社社区服务委员",
+                intro: "百合春天SPA创始于2002年，独有百合花系统六大体系为女性健康美丽提供整体解决方案。"
+            },
+            {
+                id: 121,
+                name: "孙冬梅",
+                englishName: "Sunny",
+                company: "洋光生活馆",
+                title: "总经理",
+                category: "03",
+                subCategory: "地产/建筑",
+                club: "香江社",
+                phone: "13552686834",
+                wechat: "sundm1970",
+                email: "1696230363@qq.com",
+                rotaryRole: "香江社社区服务委员",
+                intro: "欧洲家装主材进口，德国洁具、橱柜、电器、地板、衣帽间、意大利家具等。"
+            },
+            {
+                id: 122,
+                name: "位炜",
+                englishName: "Wei",
+                company: "施坦威钢琴亚太有限公司",
+                title: "总裁",
+                category: "12",
+                subCategory: "消费/零售",
+                club: "香江社",
+                phone: "13764319058",
+                wechat: "13764319058",
+                email: "Wei_wei78@yahoo.com",
+                rotaryRole: "香江社社员发展委员/节目委员",
+                intro: "负责世界顶级钢琴施坦威亚太区业务。"
+            },
+            {
+                id: 123,
+                name: "宗蓓",
+                englishName: "Zong Bei",
+                company: "Horizon Asian Pte. Ltd.",
+                title: "Director",
+                category: "07",
+                subCategory: "贸易/物流",
+                club: "香江社",
+                phone: "13701196409",
+                wechat: "ZongBeiChina",
+                email: "zong.bei2021@gmail.com",
+                rotaryRole: "香江社社员发展委员",
+                intro: "食品国际贸易，尤其是冷冻水产品。"
+            },
+            {
+                id: 124,
+                name: "孟璐",
+                englishName: "Lulu",
+                company: "UNITAR China",
+                title: "Representative",
+                category: "06",
+                subCategory: "法律/政务",
+                club: "香江社",
+                phone: "18705325816",
+                wechat: "18705325816",
+                email: "Lu.meng@unitar.org",
+                rotaryRole: "香江社联谊委员",
+                intro: "UN agency中国首席代表。"
+            },
+            {
+                id: 125,
+                name: "马征",
+                englishName: "Martin",
+                company: "Happy Universe",
+                title: "CEO",
+                category: "01",
+                subCategory: "科技/IT",
+                club: "香江社",
+                phone: "13810098420",
+                wechat: "martin97",
+                email: "mazheng@gmail.com",
+                rotaryRole: "香江社职业服务委员",
+                intro: "企业数字化转型、AI转型、App出海的投资咨询。"
+            },
+            {
+                id: 126,
+                name: "Lea Bochtler",
+                englishName: "Lea",
+                company: "北京正和新生代科技发展有限公司",
+                title: "Coach",
+                category: "08",
+                subCategory: "教育/培训",
+                club: "香江社",
+                phone: "18618122477",
+                wechat: "LeaB66",
+                email: "Leabochtler99@gmail.com",
+                rotaryRole: "香江社",
+                intro: "时间管理教练。"
+            },
+            {
+                id: 127,
+                name: "姜芸",
+                englishName: "Angela",
+                company: "待补充",
+                title: "待补充",
+                category: "07",
+                subCategory: "待补充",
+                club: "昆山社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 128,
+                name: "钟慕慧",
+                englishName: "Chloe",
+                company: "待补充",
+                title: "待补充",
+                category: "01",
+                subCategory: "待补充",
+                club: "昆山社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 129,
+                name: "寇广超",
+                englishName: "Clark",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "昆山社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 130,
+                name: "李佳縈",
+                englishName: "Lily",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "昆山社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 131,
+                name: "郑世鼎",
+                englishName: "Vincent",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 132,
+                name: "史景旭",
+                englishName: "Joseph",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 133,
+                name: "李琳",
+                englishName: "Lynn",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 134,
+                name: "赖玺倡",
+                englishName: "Kevin",
+                company: "待补充",
+                title: "待补充",
+                category: "07",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 135,
+                name: "郑元硕",
+                englishName: "Dplo",
+                company: "待补充",
+                title: "待补充",
+                category: "11",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 136,
+                name: "郑擎宇",
+                englishName: "kids",
+                company: "待补充",
+                title: "待补充",
+                category: "10",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 137,
+                name: "杨哲权",
+                englishName: "Dentist",
+                company: "待补充",
+                title: "待补充",
+                category: "05",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 138,
+                name: "杨惠琪",
+                englishName: "Yoyo",
+                company: "待补充",
+                title: "待补充",
+                category: "03",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 139,
+                name: "恽可永",
+                englishName: "Clio",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 140,
+                name: "张英德",
+                englishName: "Inder",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 141,
+                name: "陈俊玮",
+                englishName: "Alan",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 142,
+                name: "谢肇峰",
+                englishName: "Ivan",
+                company: "待补充",
+                title: "待补充",
+                category: "10",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 143,
+                name: "徐乃达",
+                englishName: "Richard",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 144,
+                name: "朱光亮",
+                englishName: "Lohas",
+                company: "待补充",
+                title: "待补充",
+                category: "03",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 145,
+                name: "周台生",
+                englishName: "OEM",
+                company: "待补充",
+                title: "待补充",
+                category: "07",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 146,
+                name: "宋后旒",
+                englishName: "Whisky",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 147,
+                name: "郑朝尹",
+                englishName: "Ian",
+                company: "待补充",
+                title: "待补充",
+                category: "03",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 148,
+                name: "孙治宁",
+                englishName: "Pony",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 149,
+                name: "黄宗瀚",
+                englishName: "Doctor",
+                company: "待补充",
+                title: "待补充",
+                category: "05",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 150,
+                name: "林建兴",
+                englishName: "Johnson",
+                company: "待补充",
+                title: "待补充",
+                category: "12",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 151,
+                name: "游智亮",
+                englishName: "Jungle",
+                company: "待补充",
+                title: "待补充",
+                category: "07",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 152,
+                name: "黄守裕",
+                englishName: "Tailor",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 153,
+                name: "吴海强",
+                englishName: "Tony",
+                company: "待补充",
+                title: "待补充",
+                category: "02",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 154,
+                name: "徐俊菁",
+                englishName: "Gill",
+                company: "待补充",
+                title: "待补充",
+                category: "02",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 155,
+                name: "林楠杰",
+                englishName: "IronMan",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 156,
+                name: "姜至善",
+                englishName: "Semi",
+                company: "待补充",
+                title: "待补充",
+                category: "01",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 157,
+                name: "颜建凯",
+                englishName: "YJK",
+                company: "待补充",
+                title: "待补充",
+                category: "07",
+                subCategory: "待补充",
+                club: "浦西社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 158,
+                name: "凌宗玮",
+                englishName: "Marco",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "文华社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 159,
+                name: "李宜池",
+                englishName: "liyihong",
+                company: "待补充",
+                title: "待补充",
+                category: "05",
+                subCategory: "待补充",
+                club: "文华社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            },
+            {
+                id: 160,
+                name: "黄柏宁",
+                englishName: "Pony",
+                company: "待补充",
+                title: "待补充",
+                category: "04",
+                subCategory: "待补充",
+                club: "文华社",
+                phone: "待补充",
+                wechat: "待补充",
+                email: "待补充",
+                rotaryRole: "待补充",
+                intro: "待补充"
+            }
+        ];
+        
+        const categoryNames = {
+            '01': '科技/互联网/软件/信息',
+            '02': '金融/财务/银行/投资/保险/基金/证券',
+            '03': '房地产/物业/建筑/商管',
+            '04': '生产制造/供应链/环境/能源',
+            '05': '医药/健康/生技',
+            '06': '律师/法务/合规/政府/NGO',
+            '07': '贸易/运输/报关/货代',
+            '08': '教育/培训/留学/学术机构',
+            '09': '休闲/体育/户外/宠物',
+            '10': '设计/艺术/音乐/影视/文化/IP',
+            '11': '市场/公关/传播/媒体/广告/品牌',
+            '12': '餐饮/零售/服务/电商/快消',
+            '13': '农/林/渔/牧'
+        };
+        const categoryNamesEn = {
+            '01': 'IT / Technology',
+            '02': 'Finance / Banking',
+            '03': 'Real Estate / Construction',
+            '04': 'Manufacturing / Supply Chain',
+            '05': 'Medical / Healthcare',
+            '06': 'Legal / Compliance',
+            '07': 'Trade / Logistics',
+            '08': 'Education / Training',
+            '09': 'Leisure / Sports',
+            '10': 'Design / Arts / Culture',
+            '11': 'Marketing / Media',
+            '12': 'Retail / Service / E-commerce',
+            '13': 'Agriculture / Forestry'
+        };
+        
+        function renderLegend() {
+            const grid = document.getElementById('legendGrid');
+            grid.innerHTML = Object.keys(categories).map(key => `
+                <div class="legend-card" onclick="filterByCategory('${key}')">
+                    <span class="legend-card-code">${key}</span>
+                    <span class="legend-card-label">${categoryNames[key]} <span class="en">${categoryNamesEn[key]}</span></span>
+                </div>
+            `).join('');
+        }
+        
+        function filterByCategory(cat) {
+            currentCategoryFilter = cat;
+            document.querySelectorAll('.filter-btn[data-type="category"]').forEach(b => {
+                b.classList.toggle('active', b.dataset.value === cat);
+            });
+            renderCards();
+        }
+        
+        let currentCategoryFilter = 'all';
+        let currentClubFilter = 'all';
+        let currentSearch = '';
+        let editingId = null;
+        
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            const filtered = contacts.filter(contact => {
+                const matchCategory = currentCategoryFilter === 'all' || contact.category === currentCategoryFilter;
+                const matchClub = currentClubFilter === 'all' || contact.club === currentClubFilter;
+                const matchSearch = currentSearch === '' || 
+                    contact.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    contact.englishName.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    contact.company.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    contact.title.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    contact.subCategory.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    contact.rotaryRole.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchCategory && matchClub && matchSearch;
+            });
+            
+            grid.innerHTML = filtered.map(contact => {
+                const cat = categories[contact.category];
+                const club = clubNames[contact.club];
+                return `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-header-top">
+                                <div class="name-section">
+                                    <h3>${contact.name} <span class="english-name">${contact.englishName}</span></h3>
+                                </div>
+                                <div class="header-tags">
+                                    <span class="category-tag">${cat.name}</span>
+                                    <span class="club-tag">${club.cn} ${club.en}</span>
+                                </div>
+                            </div>
+                            <div class="title-company">
+                                <strong>${contact.title}</strong> · ${contact.company}
+                            </div>
+                            <button class="card-edit-btn" onclick="openEditModal(${contact.id})">编辑 Edit</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-section">
+                                <div class="info-label">细分行业 / Sub-industry</div>
+                                <div class="info-value">${contact.subCategory}</div>
+                            </div>
+                            <div class="info-section">
+                                <div class="info-label">联系方式 / Contact</div>
+                                <div class="contact-grid">
+                                    <div class="info-value">📞 <a href="tel:${contact.phone}">${contact.phone}</a></div>
+                                    <div class="info-value">💬 ${contact.wechat}</div>
+                                    <div class="info-value">📧 <a href="mailto:${contact.email}">${contact.email}</a></div>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <div class="info-label">公司介绍 / Company</div>
+                                <div class="info-value">${contact.intro}</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <strong>社团职务 / Committee Role</strong>
+                            ${contact.rotaryRole}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.dataset.type;
+                const value = this.dataset.value;
+                const parentGroup = this.parentElement;
+                
+                parentGroup.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                if (type === 'category') {
+                    currentCategoryFilter = value;
+                } else if (type === 'club') {
+                    currentClubFilter = value;
+                }
+                renderCards();
+            });
+        });
+        
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            currentSearch = e.target.value;
+            renderCards();
+        });
+        
+        function openEditModal(id) {
+            editingId = id;
+            const contact = contacts.find(c => c.id === id);
+            const isOwner = contact.name === "韩宇豪";
+            
+            document.getElementById('editName').value = contact.name;
+            document.getElementById('editEnglishName').value = contact.englishName;
+            document.getElementById('editCompany').value = contact.company;
+            document.getElementById('editTitle').value = contact.title;
+            document.getElementById('editCategory').value = contact.category;
+            document.getElementById('editSubCategory').value = contact.subCategory;
+            document.getElementById('editClub').value = contact.club;
+            document.getElementById('editPhone').value = contact.phone;
+            document.getElementById('editWechat').value = contact.wechat;
+            document.getElementById('editEmail').value = contact.email;
+            document.getElementById('editRotaryRole').value = contact.rotaryRole;
+            document.getElementById('editIntro').value = contact.intro;
+            
+            document.getElementById('editPhone').readOnly = !isOwner;
+            document.getElementById('editWechat').readOnly = !isOwner;
+            document.getElementById('editEmail').readOnly = !isOwner;
+            
+            document.getElementById('phoneHint').style.display = isOwner ? 'none' : 'block';
+            document.getElementById('wechatHint').style.display = isOwner ? 'none' : 'block';
+            document.getElementById('emailHint').style.display = isOwner ? 'none' : 'block';
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingId = null;
+        }
+        
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const contact = contacts.find(c => c.id === editingId);
+            contact.name = document.getElementById('editName').value;
+            contact.englishName = document.getElementById('editEnglishName').value;
+            contact.company = document.getElementById('editCompany').value;
+            contact.title = document.getElementById('editTitle').value;
+            contact.category = document.getElementById('editCategory').value;
+            contact.subCategory = document.getElementById('editSubCategory').value;
+            contact.club = document.getElementById('editClub').value;
+            contact.phone = document.getElementById('editPhone').value;
+            contact.wechat = document.getElementById('editWechat').value;
+            contact.email = document.getElementById('editEmail').value;
+            contact.rotaryRole = document.getElementById('editRotaryRole').value;
+            contact.intro = document.getElementById('editIntro').value;
+            closeModal();
+            renderCards();
+            alert('已保存 / Saved');
+        });
+        
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        renderLegend();
+        renderCards();
+    </script>
+</body>
+</html>
