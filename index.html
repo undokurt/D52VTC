@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocational Service Committee CRM v3</title>
+    <title>Vocational Service Committee CRM v4</title>
     <style>
         * {
             margin: 0;
@@ -472,6 +472,170 @@
             font-size: 0.9em;
             margin-left: 4px;
         }
+    
+        .chart-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 25px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-section-title {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .pie-chart-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .pie-chart {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .pie-chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        
+        .pie-chart-center .total-num {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #333;
+            line-height: 1;
+        }
+        
+        .pie-chart-center .total-label {
+            font-size: 0.7em;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        .pie-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+        }
+        
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8em;
+            color: #555;
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .pie-legend-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .pie-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .pie-legend-label {
+            white-space: nowrap;
+        }
+        
+        .pie-legend-count {
+            color: #999;
+            font-size: 0.9em;
+            margin-left: auto;
+        }
+    
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px 10px;
+            }
+            .header {
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+            .header h1 {
+                font-size: 1.4em;
+            }
+            .controls {
+                padding: 15px;
+            }
+            .filter-buttons {
+                gap: 5px;
+            }
+            .filter-btn {
+                font-size: 0.7em;
+                padding: 5px 8px;
+            }
+            .card {
+                padding: 15px;
+            }
+            .card-header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .header-tags {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .category-tag, .club-tag {
+                font-size: 0.7em;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .pie-chart-wrapper {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .pie-chart {
+                width: 200px;
+                height: 200px;
+            }
+            .pie-chart-center {
+                width: 76px;
+                height: 76px;
+            }
+            .pie-chart-center .total-num {
+                font-size: 1.3em;
+            }
+            .pie-legend {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            .chart-section {
+                padding: 15px;
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -479,14 +643,14 @@
         <div class="header">
             <h1>职业服务委员会</h1>
             <div class="subtitle">Vocational Service Committee</div>
-            <div class="desc">联系人管理系统 · Contact Management System</div>
+            
         </div>
         
         <div class="controls">
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="搜索 Search：姓名 Name、公司 Company、职位 Title、行业 Industry...">
             </div>
-            
+
             <div class="filter-section">
                 <div class="filter-section-label">职业分类 / Vocational Category</div>
                 <div class="filter-buttons" id="categoryFilters">
@@ -508,7 +672,7 @@
             </div>
             
             <div class="filter-section">
-                <div class="filter-section-label">所属分社 / Club</div>
+                <div class="filter-section-label">分社 / Club</div>
                 <div class="filter-buttons" id="clubFilters">
                     <button class="filter-btn active" data-type="club" data-value="all">全部 All (160)</button>
                     <button class="filter-btn" data-type="club" data-value="昆山社">昆山社 RC Kunshan (16)</button>
@@ -524,10 +688,23 @@
             <div class="stats">
                 <div>总联系人 Total：<span>160</span></div>
                 <div>职业分类 Categories：<span>13</span></div>
-                <div>分社 Clubs：<span>昆山社 RC Kunshan (16) · 虹桥社 RC Shanghai Hongqiao (38) · 古北社 RC Shanghai Gubei (22) · 文华社 RC Suzhou Wenhua (28) · 扶新社 RC Shanghai Fusin (5) · 香江社 RC Beijing Riviera (24) · 浦西社 RC Shanghai Puxi (27)</span></div>
+                <div>分社 Clubs：<span>7</span></div>
             </div>
         
         <div class="cards-grid" id="cardsGrid"></div>
+        
+        <div class="chart-section" id="chartSection">
+            <div class="chart-section-title">职业分布 / Vocational Distribution</div>
+            <div class="pie-chart-wrapper">
+                <div class="pie-chart" id="pieChart">
+                    <div class="pie-chart-center">
+                        <div class="total-num">160</div>
+                        <div class="total-label">总人数</div>
+                    </div>
+                </div>
+                <div class="pie-legend" id="pieLegend"></div>
+            </div>
+        </div>
     </div>
     
     <div class="modal" id="editModal">
@@ -3079,6 +3256,7 @@
         
         function renderLegend() {
             const grid = document.getElementById('legendGrid');
+            if (!grid) return;
             grid.innerHTML = Object.keys(categories).map(key => `
                 <div class="legend-card" onclick="filterByCategory('${key}')">
                     <span class="legend-card-code">${key}</span>
@@ -3243,8 +3421,54 @@
             if (e.target === this) closeModal();
         });
         
+        // Pie chart colors
+        const pieColors = [
+            '#4E79A7','#F28E2B','#E15759','#76B7B2','#59A14F',
+            '#EDC948','#B07AA1','#FF9DA7','#9C755F','#BAB0AC',
+            '#5B8FF9','#5AD8A6','#F6BD16'
+        ];
+        
+        function renderPieChart() {
+            // Count by category
+            const counts = {};
+            contacts.forEach(c => {
+                counts[c.category] = (counts[c.category] || 0) + 1;
+            });
+            
+            // Sort by count descending
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            const total = contacts.length;
+            
+            // Build conic-gradient
+            let gradientParts = [];
+            let cumulative = 0;
+            sorted.forEach(([cat, count], i) => {
+                const pct = (count / total) * 100;
+                const color = pieColors[i % pieColors.length];
+                gradientParts.push(`${color} ${cumulative}% ${cumulative + pct}%`);
+                cumulative += pct;
+            });
+            
+            const pieEl = document.getElementById('pieChart');
+            pieEl.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+            
+            // Build legend
+            const legendEl = document.getElementById('pieLegend');
+            legendEl.innerHTML = sorted.map(([cat, count], i) => {
+                const color = pieColors[i % pieColors.length];
+                const pct = ((count / total) * 100).toFixed(1);
+                const name = categoryNames[cat] || cat;
+                return `<div class="pie-legend-item" onclick="filterByCategory('${cat}')">
+                    <span class="pie-legend-dot" style="background:${color}"></span>
+                    <span class="pie-legend-label">${name}</span>
+                    <span class="pie-legend-count">${count}人 (${pct}%)</span>
+                </div>`;
+            }).join('');
+        }
+        
         renderLegend();
         renderCards();
+        renderPieChart();
     </script>
 </body>
 </html>
