@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocational Service Committee CRM v4</title>
+    <title>D52 职业服务委员会 / Vocational Service Committee CRM</title>
     <style>
         * {
             margin: 0;
@@ -211,25 +210,7 @@
         .title-company strong {
             color: #333;
         }
-        
-        .card-edit-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 1px solid #d0d0d0;
-            color: #999;
-            padding: 4px 10px;
-            font-size: 0.75em;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .card-edit-btn:hover {
-            border-color: #333;
-            color: #333;
-        }
-        
+
         .card-body {
             padding: 20px;
         }
@@ -287,133 +268,7 @@
             margin-bottom: 4px;
             font-size: 0.9em;
         }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border: 1px solid #e0e0e0;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .modal-header h2 {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.8em;
-            cursor: pointer;
-            color: #999;
-            line-height: 1;
-        }
-        
-        .close-btn:hover {
-            color: #333;
-        }
-        
-        .form-group {
-            margin-bottom: 18px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: #333;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-        
-        .form-group label .en {
-            color: #999;
-            font-weight: 400;
-            font-size: 0.85em;
-            margin-left: 4px;
-        }
-        
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d0d0d0;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #333;
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-        }
-        
-        .form-group input[readonly] {
-            background-color: #f5f5f5;
-            cursor: not-allowed;
-            color: #999;
-        }
-        
-        .readonly-hint {
-            font-size: 0.75em;
-            color: #999;
-            margin-top: 4px;
-            font-style: italic;
-        }
-        
-        .save-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            cursor: pointer;
-            font-size: 14px;
-            width: 100%;
-            margin-top: 10px;
-            transition: background 0.2s;
-        }
-        
-        .save-btn:hover {
-            background: #1a1a1a;
-        }
+
         .legend {
             margin-top: 20px;
             padding: 15px;
@@ -706,93 +561,7 @@
             </div>
         </div>
     </div>
-    
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>编辑联系人 <span style="color:#999;font-weight:400;font-size:0.8em;">Edit Contact</span></h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="editForm">
-                <div class="form-group">
-                    <label>姓名 <span class="en">Name</span></label>
-                    <input type="text" id="editName" required>
-                </div>
-                <div class="form-group">
-                    <label>英文名 <span class="en">English Name</span></label>
-                    <input type="text" id="editEnglishName">
-                </div>
-                <div class="form-group">
-                    <label>公司名称 <span class="en">Company</span></label>
-                    <input type="text" id="editCompany" required>
-                </div>
-                <div class="form-group">
-                    <label>职位 <span class="en">Title</span></label>
-                    <input type="text" id="editTitle" required>
-                </div>
-                <div class="form-group">
-                    <label>职业分类 <span class="en">Category</span></label>
-                    <select id="editCategory" required>
-                        <option value="01">01 IT 科技/互联网/软件/信息</option>
-                        <option value="02">02 FIN 金融/财务/银行/投资/保险/基金/证券</option>
-                        <option value="03">03 RE 房地产/物业/建筑/商管</option>
-                        <option value="04">04 MFG 生产制造/供应链/环境/能源</option>
-                        <option value="05">05 MED 医药/健康/生技</option>
-                        <option value="06">06 LEG 律师/法务/合规/政府/NGO</option>
-                        <option value="07">07 TRADE 贸易/运输/报关/货代</option>
-                        <option value="08">08 EDU 教育/培训/留学/学术机构</option>
-                        <option value="09">09 LIFE 休闲/体育/户外/宠物</option>
-                        <option value="10">10 ART 设计/艺术/音乐/影视/文化/IP</option>
-                        <option value="11">11 MARCOM 市场/公关/传播/媒体/广告/品牌</option>
-                        <option value="12">12 CONS 餐饮/零售/服务/电商/快消</option>
-                        <option value="13">13 AGRI 农/林/渔/牧</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>细分行业 <span class="en">Sub-industry</span></label>
-                    <input type="text" id="editSubCategory">
-                </div>
-                <div class="form-group">
-                    <label>所属分社 <span class="en">Club</span></label>
-                    <select id="editClub">
-                        <option value="">-- 选择分社 Select Club --</option>
-                        <option value="昆山社">昆山社 RC Kunshan</option>
-                        <option value="虹桥社">虹桥社 RC Shanghai Hongqiao</option>
-                        <option value="古北社">古北社 RC Shanghai Gubei</option>
-                        <option value="文华社">文华社 RC Suzhou Wenhua</option>
-                        <option value="扶新社">扶新社 RC Shanghai Fusin</option>
-                        <option value="香江社">香江社 RC Beijing Riviera</option>
-                        <option value="浦西社">浦西社 RC Shanghai Puxi</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>电话 <span class="en">Phone</span></label>
-                    <input type="text" id="editPhone">
-                    <div class="readonly-hint" id="phoneHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
-                </div>
-                <div class="form-group">
-                    <label>微信 <span class="en">WeChat</span></label>
-                    <input type="text" id="editWechat">
-                    <div class="readonly-hint" id="wechatHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
-                </div>
-                <div class="form-group">
-                    <label>邮箱 <span class="en">Email</span></label>
-                    <input type="email" id="editEmail">
-                    <div class="readonly-hint" id="emailHint" style="display:none;">非本人不可编辑 / Contact info editable by owner only</div>
-                </div>
-                <div class="form-group">
-                    <label>社团职务 <span class="en">Committee Role</span></label>
-                    <textarea id="editRotaryRole"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>自我介绍 <span class="en">Introduction</span></label>
-                    <textarea id="editIntro"></textarea>
-                </div>
-                <button type="submit" class="save-btn">保存 / Save</button>
-            </form>
-        </div>
-    </div>
-    
+
     <script>
         const categories = {
             '01': { code: 'IT', name: '科技' },
@@ -3276,8 +3045,7 @@
         let currentCategoryFilter = 'all';
         let currentClubFilter = 'all';
         let currentSearch = '';
-        let editingId = null;
-        
+
         function renderCards() {
             const grid = document.getElementById('cardsGrid');
             const filtered = contacts.filter(contact => {
@@ -3311,7 +3079,7 @@
                             <div class="title-company">
                                 <strong>${contact.title}</strong> · ${contact.company}
                             </div>
-                            <button class="card-edit-btn" onclick="openEditModal(${contact.id})">编辑 Edit</button>
+                            
                         </div>
                         <div class="card-body">
                             <div class="info-section">
@@ -3362,65 +3130,7 @@
             currentSearch = e.target.value;
             renderCards();
         });
-        
-        function openEditModal(id) {
-            editingId = id;
-            const contact = contacts.find(c => c.id === id);
-            const isOwner = contact.name === "韩宇豪";
-            
-            document.getElementById('editName').value = contact.name;
-            document.getElementById('editEnglishName').value = contact.englishName;
-            document.getElementById('editCompany').value = contact.company;
-            document.getElementById('editTitle').value = contact.title;
-            document.getElementById('editCategory').value = contact.category;
-            document.getElementById('editSubCategory').value = contact.subCategory;
-            document.getElementById('editClub').value = contact.club;
-            document.getElementById('editPhone').value = contact.phone;
-            document.getElementById('editWechat').value = contact.wechat;
-            document.getElementById('editEmail').value = contact.email;
-            document.getElementById('editRotaryRole').value = contact.rotaryRole;
-            document.getElementById('editIntro').value = contact.intro;
-            
-            document.getElementById('editPhone').readOnly = !isOwner;
-            document.getElementById('editWechat').readOnly = !isOwner;
-            document.getElementById('editEmail').readOnly = !isOwner;
-            
-            document.getElementById('phoneHint').style.display = isOwner ? 'none' : 'block';
-            document.getElementById('wechatHint').style.display = isOwner ? 'none' : 'block';
-            document.getElementById('emailHint').style.display = isOwner ? 'none' : 'block';
-            
-            document.getElementById('editModal').classList.add('active');
-        }
-        
-        function closeModal() {
-            document.getElementById('editModal').classList.remove('active');
-            editingId = null;
-        }
-        
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const contact = contacts.find(c => c.id === editingId);
-            contact.name = document.getElementById('editName').value;
-            contact.englishName = document.getElementById('editEnglishName').value;
-            contact.company = document.getElementById('editCompany').value;
-            contact.title = document.getElementById('editTitle').value;
-            contact.category = document.getElementById('editCategory').value;
-            contact.subCategory = document.getElementById('editSubCategory').value;
-            contact.club = document.getElementById('editClub').value;
-            contact.phone = document.getElementById('editPhone').value;
-            contact.wechat = document.getElementById('editWechat').value;
-            contact.email = document.getElementById('editEmail').value;
-            contact.rotaryRole = document.getElementById('editRotaryRole').value;
-            contact.intro = document.getElementById('editIntro').value;
-            closeModal();
-            renderCards();
-            alert('已保存 / Saved');
-        });
-        
-        document.getElementById('editModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-        
+
         // Pie chart colors
         const pieColors = [
             '#4E79A7','#F28E2B','#E15759','#76B7B2','#59A14F',
